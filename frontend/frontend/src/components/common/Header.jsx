@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/clg_logo[1].png';
 import AnimatedText from './AnimatedText';
 import Navigation from '../nav/Navigation';
+import { typography, textColors } from '../../utils/typography';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -31,11 +32,17 @@ const Header = () => {
               src={logo}
               alt="Sri Eshwar College Logo"
               style={{
-                height: '50px',
+                height: '120px',
                 width: 'auto'
               }}
             />
-            <h1 className="page-title" style={{ margin: 0 }}>
+            <h1 className="page-title" style={{ 
+              margin: 0,
+              fontFamily: typography.fontFamily.primary,
+              fontSize: '2.5rem',
+              fontWeight: typography.fontWeight.bold,
+              color: textColors.primary
+            }}>
               <AnimatedText text={'Sri Eshwar Leave Management System'} />
             </h1>
           </div>
@@ -44,7 +51,13 @@ const Header = () => {
           {user && (
             <div className="header-actions">
               <span className="badge badge-info" aria-hidden>{user.role}</span>
-              <button className="btn btn-outline" onClick={handleLogout} aria-label="Logout" style={{backgroundColor: '#EF4444', color: 'white', borderColor: '#EF4444', marginLeft: '24px'}}>
+              <button className="btn btn-outline" onClick={handleLogout} aria-label="Logout" style={{
+                ...typography.styles.button,
+                backgroundColor: '#EF4444', 
+                color: 'white', 
+                borderColor: '#EF4444', 
+                marginLeft: '24px'
+              }}>
                 Logout
               </button>
             </div>

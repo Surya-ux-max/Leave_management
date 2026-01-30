@@ -48,7 +48,7 @@ const AllApplications = () => {
   const formatStatus = (status) => {
     switch (status) {
       case 'PENDING_FACULTY': return 'Pending Faculty Review';
-      case 'PENDING_HOD': return 'Pending HOD Approval';
+      case 'PENDING_HOD': return 'Pending';
       case 'APPROVED': return 'Approved';
       case 'REJECTED': return 'Rejected';
       default: return status;

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
-import Card from '../common/Card';
-import AnimatedText from '../common/AnimatedText';
 
 const LoginForm = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [formData, setFormData] = useState({
     college_email: '',
     password: ''
@@ -14,6 +13,18 @@ const LoginForm = () => {
   
   const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX - window.innerWidth / 2) / 50,
+        y: (e.clientY - window.innerHeight / 2) / 50
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -72,232 +83,231 @@ const LoginForm = () => {
 
   return (
     <div style={{
-      position: 'relative',
+      display: 'flex',
       width: '100vw',
       height: '100vh',
       overflow: 'hidden'
     }}>
-      {/* Video Background with Brightness Filter */}
+      {/* Left Side - Video */}
       <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        overflow: 'hidden',
-        zIndex: -1
+        flex: '1',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
         <video
           autoPlay
           muted
           loop
+          playsInline
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            minWidth: '100%',
-            minHeight: '100%',
-            width: 'auto',
-            height: 'auto',
-            transform: 'translate(-50%, -50%)',
-            filter: 'brightness(0.8) contrast(1.1) saturate(1.2)'
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
           }}
         >
           <source src="/clg video.mp4" type="video/mp4" />
         </video>
       </div>
       
-      {/* Semi-transparent overlay with green tint */}
+      {/* Right Side - Login Form */}
       <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'rgba(16, 42, 66, 0.4)',
-        zIndex: 0
-      }} />
-      
-      {/* Login Form Container */}
-      <div className="flex justify-center items-center" style={{
-        position: 'relative',
-        zIndex: 1,
-        height: '100%',
-        padding: '2rem',
+        width: '500px',
+        display: 'flex',
+        alignItems: 'stretch',
+        backgroundColor: '#f8fafc'
       }}>
-      <div style={{
-        width: '100%',
-        maxWidth: '420px',
-        background: 'rgba(255, 255, 255, 0.9)',
-        borderRadius: '12px',
-        boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
-        overflow: 'hidden',
-        backdropFilter: 'blur(5px)'
-      }}>
-        {/* Header */}
-        <div style={{
-          padding: '2rem 2rem 1.5rem',
-          borderBottom: '1px solid #e2e8f0',
-          textAlign: 'center'
-        }}>
-          <h2 style={{
-            fontSize: '1.5rem',
-            fontWeight: '600',
-            color: '#2d3748',
-            marginBottom: '0.5rem'
-          }}>
-            Sri Eshwar Leave Management System
-          </h2>
-          <p style={{
-            color: '#718096',
-            fontSize: '0.875rem'
-          }}>Sign in to your account</p>
-        </div>
-
-        {/* Form */}
-        <div style={{ padding: '1.5rem 2rem' }}>
-          {error && (
-            <div style={{
-              backgroundColor: '#fff5f5',
-              color: '#e53e3e',
-              padding: '0.75rem 1rem',
-              borderRadius: '0.375rem',
-              marginBottom: '1.25rem',
-              fontSize: '0.875rem',
-              borderLeft: '4px solid #e53e3e'
+        {/* Login Form Card */}
+        <div 
+          style={{
+            background: '#ffffff',
+            borderRadius: '0',
+            padding: '3rem 2rem',
+            boxShadow: 'none',
+            border: 'none',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            transform: `translate(${mousePosition.x * 0.1}px, ${mousePosition.y * 0.1}px)`,
+            transition: 'transform 0.1s ease-out'
+          }}
+        >
+          {/* Header */}
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{
+              fontSize: '1.75rem',
+              fontWeight: '800',
+              color: '#1a202c',
+              marginBottom: '0.5rem',
+              lineHeight: '1.1',
+              letterSpacing: '-0.02em'
             }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} style={{ marginBottom: '1.5rem' }}>
-            <div style={{ marginBottom: '1.25rem' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                color: '#4a5568',
-                marginBottom: '0.5rem'
-              }}>
-                College Email
-              </label>
-              <input
-                type="email"
-                name="college_email"
-                value={formData.college_email}
-                onChange={handleChange}
-                required
-                style={{
-                  width: '100%',
-                  padding: '0.625rem',
-                  borderRadius: '0.375rem',
-                  border: '1px solid #e2e8f0',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  transition: 'border-color 0.2s',
-                }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '1.5rem' }}>
+              Sri Eshwar College of Engineering
+            </h1>
+            <div style={{
+              width: '80px',
+              height: '4px',
+              background: 'linear-gradient(90deg, #22c55e, #16a34a)',
+              borderRadius: '2px',
+              margin: '1rem 0',
+              boxShadow: '0 2px 4px rgba(34, 197, 94, 0.3)'
+            }} />
+            <h2 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: '#2d3748',
+              marginBottom: '0.5rem'
+            }}>
+              Sign in to your account
+            </h2>
+          </div>
+          {/* Form */}
+          <div>
+            {error && (
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginBottom: '0.5rem'
+                backgroundColor: '#fee2e2',
+                color: '#dc2626',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                marginBottom: '1.5rem',
+                fontSize: '0.875rem',
+                border: '1px solid #fecaca'
               }}>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} style={{ marginBottom: '2rem' }}>
+              <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{
+                  display: 'block',
                   fontSize: '0.875rem',
                   fontWeight: '500',
-                  color: '#4a5568'
+                  color: '#374151',
+                  marginBottom: '0.5rem'
+                }}>
+                  College Email
+                </label>
+                <input
+                  type="email"
+                  name="college_email"
+                  value={formData.college_email}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    borderRadius: '8px',
+                    border: '1px solid #d1d5db',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => e.target.style.borderColor = '#22c55e'}
+                  onBlur={e => e.target.style.borderColor = '#d1d5db'}
+                />
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{
+                  display: 'block',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#374151',
+                  marginBottom: '0.5rem'
                 }}>
                   Password
                 </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    borderRadius: '8px',
+                    border: '1px solid #d1d5db',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onFocus={e => e.target.style.borderColor = '#22c55e'}
+                  onBlur={e => e.target.style.borderColor = '#d1d5db'}
+                />
               </div>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
+
+              <button
+                type="submit"
+                disabled={loading}
                 style={{
                   width: '100%',
-                  padding: '0.625rem',
-                  borderRadius: '0.375rem',
-                  border: '1px solid #e2e8f0',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  transition: 'border-color 0.2s',
-                }}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                backgroundColor: '#2e7d32',
-                color: 'white',
-                fontWeight: '500',
-                borderRadius: '0.375rem',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '0.9375rem',
-                transition: 'all 0.3s ease',
-                opacity: loading ? '0.7' : '1',
-                pointerEvents: loading ? 'none' : 'auto',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
-              }}
-              onMouseOver={e => !loading && (e.target.style.backgroundColor = '#1b5e20', e.target.style.transform = 'translateY(-1px)')}
-              onMouseOut={e => !loading && (e.target.style.backgroundColor = '#2e7d32', e.target.style.transform = 'translateY(0)')}
-            >
-              {loading ? 'Logging in...' : 'Sign in'}
-            </button>
-          </form>
-
-          <div style={{
-            textAlign: 'center',
-            paddingTop: '1.25rem',
-            borderTop: '1px solid #e2e8f0',
-            marginTop: '1.5rem'
-          }}>
-            <p style={{
-              color: '#718096',
-              fontSize: '0.875rem',
-              margin: 0
-            }}>
-              Don't have an account?{' '}
-              <Link 
-                to="/register" 
-                style={{
-                  color: '#2e7d32',
+                  padding: '1rem 2rem',
+                  background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+                  color: 'white',
                   fontWeight: '600',
-                  textDecoration: 'none',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
                   transition: 'all 0.3s ease',
-                  position: 'relative',
-                  padding: '0 2px'
+                  opacity: loading ? '0.7' : '1',
+                  pointerEvents: loading ? 'none' : 'auto',
+                  boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)'
                 }}
-                onMouseOver={e => {
-                  e.target.style.color = '#1b5e20';
-                  e.target.style.textDecoration = 'underline';
-                }}
-                onMouseOut={e => {
-                  e.target.style.color = '#2e7d32';
-                  e.target.style.textDecoration = 'none';
-                }}
+                onMouseOver={e => !loading && (e.target.style.transform = 'translateY(-2px)', e.target.style.boxShadow = '0 6px 16px rgba(34, 197, 94, 0.4)')}
+                onMouseOut={e => !loading && (e.target.style.transform = 'translateY(0)', e.target.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.3)')}
               >
-                Register here
-              </Link>
-            </p>
+                {loading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </form>
+
+            {/* Footer */}
+            <div style={{
+              textAlign: 'center',
+              paddingTop: '1.5rem',
+              borderTop: '1px solid rgba(0, 0, 0, 0.1)'
+            }}>
+              <p style={{
+                color: '#6b7280',
+                fontSize: '0.875rem',
+                margin: '0 0 1rem 0'
+              }}>
+                Don't have an account?{' '}
+                <Link 
+                  to="/register" 
+                  style={{
+                    color: '#22c55e',
+                    fontWeight: '600',
+                    textDecoration: 'none',
+                    transition: 'color 0.2s'
+                  }}
+                  onMouseOver={e => e.target.style.color = '#16a34a'}
+                  onMouseOut={e => e.target.style.color = '#22c55e'}
+                >
+                  Register here
+                </Link>
+              </p>
+              <div style={{
+                color: '#6b7280',
+                fontSize: '0.875rem',
+                lineHeight: '1.5'
+              }}>
+                <p style={{ margin: '0 0 0.5rem 0' }}>
+                  © 2024 Sri Eshwar College of Engineering
+                </p>
+                <p style={{ margin: '0', fontWeight: '500' }}>
+                  Empowering Education Through Technology
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    </div>
   );
 };
-
-
 
 export default LoginForm;
