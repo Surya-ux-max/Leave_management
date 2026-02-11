@@ -1,7 +1,51 @@
+// Permission checking algorithm
+const hasPermission = (userRole, requiredRoles) => {
+  return requiredRoles.includes(userRole);
+};
 const Leave = require("../models/LeaveApplication");
 const Message = require("../models/ApplicationMessage");
 const Faculty = require("../models/Faculty");
 const User = require("../models/User");
+
+exports.getOverviewStats = async (req, res) => {
+  try {
+    const faculty = await Faculty.findOne({ user_id: req.user._id });
+    if (!faculty) return res.status(404).json({ message: "Faculty profile not found" });
+
+    // Get all applications for faculty's department and year
+    const applications = await Leave.find({
+      "student_snapshot.department": faculty.department,
+      "student_snapshot.year": faculty.assigned_year
+    });
+
+    const stats = {
+      pending: applications.filter(app => app.status === 'PENDING_FACULTY').length,
+      approved: applications.filter(app => app.status === 'APPROVED' || app.status === 'PENDING_HOD').length,
+      rejected: applications.filter(app => app.status === 'REJECTED').length,
+      total: applications.length
+    };
+
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.getAllApplications = async (req, res) => {
+  try {
+    const faculty = await Faculty.findOne({ user_id: req.user._id });
+    if (!faculty) return res.status(404).json({ message: "Faculty profile not found" });
+
+    const applications = await Leave.find({
+      "student_snapshot.department": faculty.department,
+      "student_snapshot.year": faculty.assigned_year
+    }).sort({ submitted_at: -1 });
+
+    res.json(applications);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 exports.getPendingApplications = async (req, res) => {
   try {

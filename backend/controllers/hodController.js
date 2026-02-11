@@ -3,6 +3,35 @@ const Message = require("../models/ApplicationMessage");
 const Hod = require("../models/Hod");
 const User = require("../models/User");
 
+exports.getOverviewStats = async (req, res) => {
+  try {
+    const hod = await require('../models/Hod').findOne({ user_id: req.user._id });
+    if (!hod) return res.status(404).json({ message: "HOD profile not found" });
+
+    // Get all applications for the department
+    const applications = await Leave.find({
+      "student_snapshot.department": hod.department
+    });
+
+    // Get faculty count for the department
+    const facultyCount = await Faculty.countDocuments({
+      department: hod.department
+    });
+
+    const stats = {
+      pendingHod: applications.filter(app => app.status === 'PENDING_HOD').length,
+      approved: applications.filter(app => app.status === 'APPROVED').length,
+      rejected: applications.filter(app => app.status === 'REJECTED').length,
+      total: applications.length,
+      facultyMembers: facultyCount
+    };
+
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 exports.getAllApplications = async (req, res) => {
   try {
     const hod = await Hod.findOne({ user_id: req.user._id });

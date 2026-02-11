@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use environment variable for production, fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -33,12 +34,15 @@ export const studentAPI = {
 // Faculty endpoints
 export const facultyAPI = {
   getPendingApplications: () => api.get('/faculty/applications'),
+  getAllApplications: () => api.get('/faculty/all-applications'),
+  getOverviewStats: () => api.get('/faculty/overview-stats'),
   reviewApplication: (applicationId, action, message = '') => api.put(`/faculty/${applicationId}/review`, { action, message }),
 };
 
 // HOD endpoints
 export const hodAPI = {
   getAllApplications: () => api.get('/hod/applications'),
+  getOverviewStats: () => api.get('/hod/overview-stats'),
   finalDecision: (applicationId, decisionData) => api.put(`/hod/${applicationId}/decision`, decisionData),
   deleteStudent: (studentId) => api.delete(`/student/${studentId}`),
 };

@@ -13,30 +13,20 @@ const FacultyOverview = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchApplications();
+    fetchData();
   }, []);
 
-  const fetchApplications = async () => {
+  const fetchData = async () => {
     try {
-      const response = await facultyAPI.getPendingApplications();
-      const apps = response.data;
-      setApplications(apps);
+      const [statsRes, appsRes] = await Promise.all([
+        facultyAPI.getOverviewStats(),
+        facultyAPI.getPendingApplications()
+      ]);
       
-      const today = new Date().toDateString();
-      const todayApproved = apps.filter(app => 
-        app.status === 'APPROVED' && 
-        new Date(app.updated_at).toDateString() === today
-      ).length;
-
-      setStats({
-        pending: apps.filter(app => app.status === 'PENDING_FACULTY').length,
-        approved: apps.filter(app => app.status === 'APPROVED' || app.status === 'PENDING_HOD').length,
-        rejected: apps.filter(app => app.status === 'REJECTED').length,
-        total: apps.length,
-        todayApproved
-      });
+      setStats(statsRes.data);
+      setApplications(appsRes.data);
     } catch (error) {
-      console.error('Failed to fetch applications:', error);
+      console.error('Failed to fetch data:', error);
     } finally {
       setLoading(false);
     }

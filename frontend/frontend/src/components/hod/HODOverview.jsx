@@ -14,31 +14,20 @@ const HODOverview = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchApplications();
+    fetchData();
   }, []);
 
-  const fetchApplications = async () => {
+  const fetchData = async () => {
     try {
-      const response = await hodAPI.getAllApplications();
-      const apps = response.data;
-      setApplications(apps);
+      const [statsRes, appsRes] = await Promise.all([
+        hodAPI.getOverviewStats(),
+        hodAPI.getAllApplications()
+      ]);
       
-      const today = new Date().toDateString();
-      const todayActions = apps.filter(app => 
-        (app.status === 'APPROVED' || app.status === 'REJECTED') && 
-        new Date(app.updated_at).toDateString() === today
-      ).length;
-
-      setStats({
-        pendingHod: apps.filter(app => app.status === 'PENDING_HOD').length,
-        approved: apps.filter(app => app.status === 'APPROVED').length,
-        rejected: apps.filter(app => app.status === 'REJECTED').length,
-        total: apps.length,
-        facultyMembers: 0, // This would come from a separate API call
-        todayActions
-      });
+      setStats(statsRes.data);
+      setApplications(appsRes.data);
     } catch (error) {
-      console.error('Failed to fetch applications:', error);
+      console.error('Failed to fetch data:', error);
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import FacultySidebar from '../components/faculty/FacultySidebar';
 import FacultyOverview from '../components/faculty/FacultyOverview';
 import PendingApplications from '../components/faculty/PendingApplications';
+import FacultyAllApplications from '../components/faculty/FacultyAllApplications';
 import { typography, textColors } from '../utils/typography';
 import Ballpit from '../components/common/Ballpit';
 
@@ -183,38 +184,7 @@ const FacultyDashboard = () => {
                 colors={[0xf59e0b, 0xd97706, 0xb45309]}
               />
             </div>
-            {contentWrapper(
-              <div style={{
-                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                padding: '2rem',
-                borderRadius: '12px',
-                border: '1px solid #e5e7eb',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.06)',
-                textAlign: 'center'
-              }}>
-                <div style={{ 
-                  fontSize: '3rem', 
-                  marginBottom: '1rem',
-                  display: 'flex',
-                  justifyContent: 'center'
-                }}>
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="#6b7280">
-                    <path d="M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M19,19H5V5H19V19M17,12H7V10H17V12M15,16H7V14H15V16M17,8H7V6H17V8Z"/>
-                  </svg>
-                </div>
-                <h3 style={{
-                  fontSize: '1.5rem',
-                  fontWeight: '600',
-                  color: '#374151',
-                  margin: '0 0 0.5rem 0'
-                }}>
-                  All Applications View
-                </h3>
-                <p style={{ color: '#6b7280', margin: 0 }}>
-                  This feature will show all applications with filtering and search capabilities.
-                </p>
-              </div>
-            )}
+            {contentWrapper(<FacultyAllApplications key={refreshKey} />)}
           </div>
         );
       default:
