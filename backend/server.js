@@ -13,6 +13,7 @@ const corsOptions = {
   origin: [
     'http://localhost:5173',
     'https://leave-management-silk-seven.vercel.app',
+    'https://leave-management-2-yop8.onrender.com',
     process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true,
