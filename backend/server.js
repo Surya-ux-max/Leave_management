@@ -10,18 +10,25 @@ const app = express();
 
 // CORS configuration for production
 const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'https://leave-management-silk-seven.vercel.app',
-    'https://leave-management-2-yop8.onrender.com',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+  origin: true,
   credentials: true,
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Additional CORS headers
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/student", require("./routes/studentRoutes"));
