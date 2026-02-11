@@ -11,9 +11,9 @@ const app = express();
 // CORS configuration for production
 const corsOptions = {
   origin: [
-    'http://localhost:5173', // Local development
-    'https://your-frontend-app.vercel.app', // Replace with your Vercel URL
-    process.env.FRONTEND_URL // From environment variable
+    'http://localhost:5173',
+    'https://leave-management-silk-seven.vercel.app',
+    process.env.FRONTEND_URL
   ].filter(Boolean),
   credentials: true,
   optionsSuccessStatus: 200
